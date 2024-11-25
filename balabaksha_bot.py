@@ -7,11 +7,11 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 # Мысал деректер
 menu = {
-    'Топтар': ["Sabi stars тобы 3 жас, ортаңғы топ",
-"Batyr baby тобы 3 жас, ортаңғы топ",
-"Smart qadam тобы 4 жас, ересек топ",
-"Leader bala тобы 5 жас, ересек топ",
-"Qyran land тобы 5-6 жас, мектепалды даярлық топ"],
+    'Топтар': ["3 жас ортаңғы “Sabi stars”",
+"4 жас  ересек “Batyr baby”",
+"4 жас ересек “Smart qadam”",
+"5 жас  мектепалды “Leader bala”",
+"5 жас мектепалды ”Qyran land”"],
     'Жұмыс уақыты': {
        'Жұмыс уақыты': "Дүйсенбі - Жұма аралығында 08:00-18:30. Сенбі, Жексенбі демалыс."
     },
@@ -36,14 +36,14 @@ menu = {
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Меню кнопкаларын құру
     keyboard = [
-        ['Топтарды қарау', 'Жұмыс уақыты'],
+        ['Топтар', 'Жұмыс уақыты'],
         ['Төлемақы мөлшері', 'Үйірмелерімізді қарау'],
         ['Балабақшаға келу үшін қандай құжаттар қажет?']
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     await update.message.reply_text(
-        "Сәлеметсіз бе! Біздің балабақшаға қош келдіңіз!",
+        "Сәлем бұл балабақша “Happy kids” балабақшасы" ,
         reply_markup=reply_markup
     )
 
