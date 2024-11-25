@@ -50,9 +50,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    if text == 'Топтарды қарау':
+    if text == 'Топтар':
         groups = '\n'.join(menu['Топтар'])
-        await update.message.reply_text(f"Біздің топтар:\n{groups}")
+        await update.message.reply_text(f"Топтар:\n{groups}")
     elif text == 'Жұмыс уақыты':
         schedules = '\n'.join([f"{group}: {time}" for group, time in menu['Жұмыс уақыты'].items()])
         await update.message.reply_text(f"Жұмыс уақыты:\n{schedules}")
