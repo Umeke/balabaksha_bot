@@ -1,93 +1,158 @@
-from telegram.ext import Updater, CommandHandler
-
-# Сіздің боттың токені
-TOKEN = '7669679530:AAELvjx9nGdCGvmarLibuhcpuw4zrxVyBkM'
-
-from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-# Мысал деректер
-menu = {
-    'Топтар': ["3 жас ортаңғы “Sabi stars”",
-"4 жас  ересек “Batyr baby”",
-"4 жас ересек “Smart qadam”",
-"5 жас  мектепалды “Leader bala”",
-"5 жас мектепалды ”Qyran land”"],
-    'Жұмыс уақыты': {
-       'Жұмыс уақыты': "Дүйсенбі - Жұма аралығында 08:00-18:30. Сенбі, Жексенбі демалыс."
-    },
-    'Төлемақы мөлшері': {
-       "Төлемақы мөлшері" :" 65 000 теңгені құрайды",
-    },
-    'Үйірмелерімізді қарау': ["1. Хореография",
-"2. Музыка",
-"3. Интеллектум және логика ойындары",
-"4. Логопед",
-"5. Құм (арт) терапиясы",
-"6. Тхэквондо"],
-    'Балабақшаға келу үшін қандай құжаттар қажет?':["1. Бала денсаулығы паспорты",
-"2. Эпидокружение анықтамасы",
-"3. Туу туралы куәліктің көшірмесі",
-"4. Ата-анасының жеке куәлігінің көшірмесі",
-"5. 3 х 4 фото",
-"6. 10 беттік көк папка"],
-}
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Меню кнопкаларын құру
-    keyboard = [
-        ['Топтар', 'Жұмыс уақыты'],
-        ['Төлемақы мөлшері', 'Үйірмелерімізді қарау'],
-        ['Балабақшаға келу үшін қандай құжаттар қажет?']
-    ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-
-    await update.message.reply_text(
-        "Сәлем бұл балабақша “Happy kids” балабақшасы" ,
-        reply_markup=reply_markup
-    )
-
-
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text
-    if text == 'Топтар':
-        groups = '\n'.join(menu['Топтар'])
-        await update.message.reply_text(f"Топтар:\n{groups}")
-    elif text == 'Жұмыс уақыты':
-        schedules = '\n'.join([f"{group}: {time}" for group, time in menu['Жұмыс уақыты'].items()])
-        await update.message.reply_text(f"Жұмыс уақыты:\n{schedules}")
-    elif text == 'Төлемақы мөлшері':
-        prices = '\n'.join([f"{group}: {price}" for group, price in menu['Төлемақы мөлшері'].items()])
-        await update.message.reply_text(f"Төлемақы мөлшері:\n{prices}")
-    elif text == 'Үйірмелерімізді қарау':
-        activities = '\n'.join(menu['Үйірмелерімізді қарау'])
-        await update.message.reply_text(f"Үйірмелерімізді қарау:\n{activities}")
-    elif text == 'Балабақшаға келу үшін қандай құжаттар қажет?':
-        activities = '\n'.join(menu['Балабақшаға келу үшін қандай құжаттар қажет?'])
-        await update.message.reply_text(f"Балабақшаға келу үшін қандай құжаттар қажет?:\n{activities}")
-    else:
-        await update.message.reply_text("Кешіріңіз, сұрағыңызды түсінбедім.")
-
-
-def main():
-    app = ApplicationBuilder().token(TOKEN).build()
-
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", start))  # /help командасы да /start сияқты әрекет етеді
-
-    # Барлық мәтіндік хабарларды өңдеу
-    from telegram.ext import MessageHandler, filters
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-    app.run_polling()
-
+from telegram import Update, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, CallbackQueryHandler, filters
+from telegram.request import HTTPXRequest
 import logging
 
+# Боттың токені
+TOKEN = '8019156726:AAFgg6yjrmZX8FtD-732cRSVJbi4sqxpqQI'
+
+# HTTPXRequest арқылы таймаут параметрлерін орнату
+request = HTTPXRequest(connect_timeout=60, read_timeout=60)
+
+# Ботты жасау
+app = ApplicationBuilder().token(TOKEN).request(request).build()
+
+# Файлдар
+work_schedule = {
+    "3 жас ортаңғы “Sabi stars”": "sabi_time.pdf",
+    "4 жас ересек “Batyr baby”": "batyr_time.pdf",
+    "4 жас ересек “Smart qadam”": "smart_time.pdf",
+    "5 жас мектепалды “Leader bala”": "leader_time.pdf",
+    "5 жас мектепалды “Qyran land”": "qyran_time.pdf"
+}
+
+work_schedule1 = {
+    "3 жас ортаңғы “Sabi stars”": "sabi_act.pdf",
+    "4 жас ересек “Batyr baby”": "batyr_act.pdf",
+    "4 жас ересек “Smart qadam”": "smart_act.pdf",
+    "5 жас мектепалды “Leader bala”": "leader_act.pdf",
+    "5 жас мектепалды “Qyran land”": "qyran_act.pdf"
+}
+
+text1 = {
+    "Баланың балабақшаға бейімделуіне ата-ананың көмегі": [
+        "1. Үйдегі жағдайды балаңыз келетін топтың күн режимімен сәйкестендіріңіз.",
+        "2. Тәрбиешілерге бала туралы толық мәлімет беріңіз.",
+        "3. Баланың өзіне-өзі қызмет ету қабілетін дамытыңыз.",
+        "4. Балабақшаның тамақтану мәзірімен танысыңыз.",
+        "5. Баланы махаббат пен қамқорлыққа бөлеңіз."
+    ],
+    "Баланың балабақшаға қиын бейімделу себептері": [
+        "1. Басқа адамдармен қарым-қатынасқа түспеген.",
+        "2. Өздігінен дәретке отырып үйренбеген.",
+        "3. Балабақшада ұзақ уақыт болудан қорқу."
+    ],
+    "Ертеңгілік қоштасуды жеңілдету тәсілдері": [
+        "1. Баламен тез қоштасыңыз.",
+        "2. Балабақшаға келу рәсімін бірдей жасаңыз.",
+        "3. Баланың сенімін нығайтыңыз."
+    ]
+}
+
+# Мәзір
+menu = {
+    'Топтар': ["3 жас ортаңғы “Sabi stars”",
+               "4 жас  ересек “Batyr baby”",
+               "4 жас ересек “Smart qadam”",
+               "5 жас  мектепалды “Leader bala”",
+               "5 жас мектепалды ”Qyran land”"],
+    'Жұмыс уақыты': list(work_schedule.keys()),
+    'Ұйымдастырылған іс-әрекет кестесі': list(work_schedule1.keys()),
+    'Төлемақы мөлшері': [
+        "Төлемақы мөлшері 85 000 теңгені құрайды",
+    ],
+    'Үйірмелерімізді қарау': ["1. Хореография",
+                              "2. Музыка",
+                              "3. Интеллектум және логика ойындары",
+                              "4. Логопед",
+                              "5. Құм (арт) терапиясы",
+                              "6. Тхэквондо",
+                              "7. Логопед",
+                              "Әр үйірме аптасына 2  рет өткізіледі"],
+    'Балабақшаға келу үшін қандай құжаттар қажет?': ["1. Бала денсаулығы паспорты",
+                                                     "2. Эпидокружение анықтамасы",
+                                                     "3. Туу туралы куәліктің көшірмесі",
+                                                     "4. Ата-анасының жеке куәлігінің көшірмесі",
+                                                     "5. 3 х 4 фото",
+                                                     "6. 10 беттік көк папка"],
+    'Балабақша мұрағаты': [
+        "2017 ж.бастап өз жұмысын бастаған",
+        "2022 ж. “Тәрбие тірегі” оқу-әдістемелік орталығы ұйымдастырған байқауда “Үздік балабақша” атағы.",
+        "2024 ж. Мемлекеттік аттестатциядан өтті."
+    ],
+    'Ата-аналарға консультациялық кеңестер': list(text1.keys())
+}
+
+# Логгерді баптау
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+# START командасы
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [['Топтар', 'Жұмыс уақыты'],
+                ['Төлемақы мөлшері', 'Үйірмелерімізді қарау'],
+                ['Балабақшаға келу үшін қандай құжаттар қажет?', 'Ата-аналарға консультациялық кеңестер'],
+                ['Балабақша мұрағаты', 'Ұйымдастырылған іс-әрекет кестесі']]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    await update.message.reply_text(
+        "Сәлеметсіз бе! “Happy Kids” балабақшасына қош келдіңіз!",
+        reply_markup=reply_markup
+    )
+
+# Мәтіндік хабарларды өңдеу
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    if text == 'Жұмыс уақыты':
+        keyboard = [[InlineKeyboardButton(name, callback_data=f"time_{index}")] for index, name in enumerate(menu['Жұмыс уақыты'])]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text("Топтарды таңдаңыз:", reply_markup=reply_markup)
+    elif text == 'Ата-аналарға консультациялық кеңестер':
+        keyboard = [[InlineKeyboardButton(topic, callback_data=f"advice_{index}")] for index, topic in enumerate(text1.keys())]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text("Тақырыпты таңдаңыз:", reply_markup=reply_markup)
+    elif text in menu:
+        activities = '\n'.join(menu[text]) if isinstance(menu[text], list) else str(menu[text])
+        await update.message.reply_text(activities)
+    else:
+        await update.message.reply_text("Кешіріңіз, сұрағыңызды түсінбедім.")
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+
+    data = query.data.split("_")
+    action = data[0]
+    index = int(data[1])
+
+    if action == "time":
+        group_name = menu['Жұмыс уақыты'][index]
+        file_path = work_schedule[group_name]
+        await send_file(query, context, file_path, group_name)
+    elif action == "advice":
+        topic = list(text1.keys())[index]
+        advice = '\n'.join(text1[topic])
+        await query.message.reply_text(advice)
+    else:
+        await query.message.reply_text("Белгісіз таңдау!")
+
+# Файл жіберу функциясы
+async def send_file(query, context, file_path, caption):
+    try:
+        with open(file_path, 'rb') as file:
+            await context.bot.send_document(chat_id=query.message.chat_id, document=file, caption=f"{caption}")
+    except Exception as e:
+        await query.message.reply_text(f"Файлды жіберуде қате орын алды: {e}")
+
+# Басты функция
+def main():
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(button_handler))
+
+    app.run_polling()
 
 if __name__ == '__main__':
     main()
