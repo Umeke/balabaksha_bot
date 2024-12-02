@@ -56,7 +56,7 @@ menu = {
                "4 жас ересек “Smart qadam”",
                "5 жас  мектепалды “Leader bala”",
                "5 жас мектепалды ”Qyran land”"],
-    'Жұмыс уақыты': list(work_schedule.keys()),
+    'Күн тәртібі': list(work_schedule.keys()),
     'Ұйымдастырылған іс-әрекет кестесі': list(work_schedule1.keys()),
     'Төлемақы мөлшері': [
         "Төлемақы мөлшері 85 000 теңгені құрайды",
@@ -92,7 +92,7 @@ logger = logging.getLogger(__name__)
 
 # START командасы
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [['Топтар', 'Жұмыс уақыты'],
+    keyboard = [['Топтар', 'Күн тәртібі'],
                 ['Төлемақы мөлшері', 'Үйірмелерімізді қарау'],
                 ['Балабақшаға келу үшін қандай құжаттар қажет?', 'Ата-аналарға консультациялық кеңестер'],
                 ['Балабақша мұрағаты', 'Ұйымдастырылған іс-әрекет кестесі']]
@@ -105,10 +105,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Мәтіндік хабарларды өңдеу
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    if text == 'Жұмыс уақыты':
-        keyboard = [[InlineKeyboardButton(name, callback_data=f"time_{index}")] for index, name in enumerate(menu['Жұмыс уақыты'])]
+    if text == 'Күн тәртібі':
+        keyboard = [[InlineKeyboardButton(name, callback_data=f"time_{index}")] for index, name in enumerate(menu['Күн тәртібі'])]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text("Топтарды таңдаңыз:", reply_markup=reply_markup)
+    elif text == 'Ұйымдастырылған іс-әрекет кестесі':
+        keyboard = [[InlineKeyboardButton(name, callback_data=f"activity_{index}")] for index, name in enumerate(menu['Ұйымдастырылған іс-әрекет кестесі'])]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text("Іс-әрекетті таңдаңыз:", reply_markup=reply_markup)
     elif text == 'Ата-аналарға консультациялық кеңестер':
         keyboard = [[InlineKeyboardButton(topic, callback_data=f"advice_{index}")] for index, topic in enumerate(text1.keys())]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -128,8 +132,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     index = int(data[1])
 
     if action == "time":
-        group_name = menu['Жұмыс уақыты'][index]
+        group_name = menu['Күн тәртібі'][index]
         file_path = work_schedule[group_name]
+        await send_file(query, context, file_path, group_name)
+    elif action == "activity":
+        group_name = menu['Ұйымдастырылған іс-әрекет кестесі'][index]
+        file_path = work_schedule1[group_name]
         await send_file(query, context, file_path, group_name)
     elif action == "advice":
         topic = list(text1.keys())[index]

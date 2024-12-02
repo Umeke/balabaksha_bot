@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08a95ffa-4500-4b59-803e-0b289a001840" name="Changes" comment="commit 3">
-      <change afterPath="$PROJECT_DIR$/batyr_act.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/batyr_time.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/leader_act.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/leader_time.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/qyran_act.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/qyran_time.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sabi_act.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sabi_time.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/smart_act.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/smart_time.pdf" afterDir="false" />
+    <list default="true" id="08a95ffa-4500-4b59-803e-0b289a001840" name="Changes" comment="commit 4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/balabaksha_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/balabaksha_bot.py" afterDir="false" />
     </list>
@@ -70,7 +60,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+        <option value="bundled-python-sdk-6a3326d57233-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.24807.21" />
       </set>
     </attachedChunks>
   </component>
@@ -107,13 +97,22 @@
       <option name="project" value="LOCAL" />
       <updated>1732534126651</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="commit 4">
+      <option name="closed" value="true" />
+      <created>1733156652249</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1733156652249</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit" />
     <MESSAGE value="commit 2" />
     <MESSAGE value="commit 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit 3" />
+    <MESSAGE value="commit 4" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit 4" />
   </component>
 </project>
