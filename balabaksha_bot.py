@@ -5,6 +5,11 @@ import logging
 
 # Боттың токені
 #TOKEN = '8019156726:AAFgg6yjrmZX8FtD-732cRSVJbi4sqxpqQI'
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
 
 # HTTPXRequest арқылы таймаут параметрлерін орнату
 request = HTTPXRequest(connect_timeout=60, read_timeout=60)
