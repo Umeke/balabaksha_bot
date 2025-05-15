@@ -4,7 +4,7 @@ from telegram.request import HTTPXRequest
 import logging
 
 # Боттың токені
-TOKEN = '8019156726:AAFgg6yjrmZX8FtD-732cRSVJbi4sqxpqQI'
+#TOKEN = '8019156726:AAFgg6yjrmZX8FtD-732cRSVJbi4sqxpqQI'
 
 # HTTPXRequest арқылы таймаут параметрлерін орнату
 request = HTTPXRequest(connect_timeout=60, read_timeout=60)
@@ -47,7 +47,7 @@ text1 = {
         "2. Балабақшаға келу рәсімін бірдей жасаңыз.",
         "3. Баланың сенімін нығайтыңыз."
     ],
-    # SMART QADAM үшін кеңес орнына, батырма арқылы файл жүктеу шақырылады
+    # SMART QADAM үшін кеңес орнына, батырм    а арқылы файл жүктеу шақырылады
     "SMART QADAM": "download_smart_qadam",
     "Leadar bala": "download_leader_bala",
 }
